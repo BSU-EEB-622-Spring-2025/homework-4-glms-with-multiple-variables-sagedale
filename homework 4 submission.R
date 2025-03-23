@@ -70,9 +70,16 @@ predictions(mod.nbin, newdata=data.frame(Treatment=c("parasitized", "unparasitiz
 
 # Mistletoe infection has a significant effect on altering seedling density of forest systems (p-value < 0.05). Seedling recruitment for parasitized versus unparasitized trees differs by approximatley 295.1 seedlings, as average seedling recruitment for parasitized trees is 308.2 and unparasitized trees is 13.1. The standard error for both treatments was realtivley high, 776.3 and 156.4 respectively. MAE was also high for the relative values of seedling recruitment (145.841) indicating there is likely other variables not currently included in the model that are impacting seedling recruitment within forest systems and if included in the model could account for more variation. Still, these results supports our hypothesis that mistletoe as plays a significant role parasitizing trees, changes light availability, and altering seedling recruitment and community composition beneath trees.
 
+
+## ASW: nicely done! this is awesome. The SE being high makes sense here because the seedling counts vary between 0 and >2000, and given that range, we might think of the MAE as more acceptable. Great interpretatioN!
+
+
+
 ### Explain which elements of your glm results informed your conclusions and annotate the steps you needed to take to interpret your parameters.
 
 # To inform my conclusions, I mostly used the predicted values for the mean count of seedlings based on treatment. I also looked at the estimates from my summary table and saw that the unparasitized treatment was negative relative to the intercept, so I knew that the unparasitized seedling counts would be much lower. I also looked at the standard deviation and MAE to see how far off these estimates were. 
+
+## ASW: Std dev/SE on the estimates are more about precision in the estimates of effects, rather than fit, but great overall!!
 
 ## 1c)  Fit an additional glm that quantifies how the effect of mistletoe differs between the two years in this study.
 
@@ -103,6 +110,11 @@ performance::mae(mod.nbin2)
 ### Write ~2 new sentences that summarize the results of the new model and their biological implications.
 
 # The effect of treatment is not dependent on year because it was only marginally significant (p-value = 0.0599). If year was significant, we would see that it had a negative impact on seedling recruitment for the parasitized treatments and a positive impact on seedling recruitment for unparasitized treatments from 2011 to 2012 (found from the predictions table). MAE only decreased slightly (~140) and was still very high relative to seedling estimates. These results, however, are not significant and have substantial standard error for seedling estimates, thus these conclusions cannot be made.
+
+## ASW: right! I think you can still talk about changes that are marginally significant (just stating that they are marginally significant), but the direction of effects you summarize above are spot on!
+
+## 30/30
+
 
 ## Question 2:
 
@@ -137,7 +149,7 @@ plogis(0.9933+-1.8559*1)
 # = 0.2967964
 
 # Plot to visualize slope 
-
+library(ggplot2)
 plot_predictions(mod.bi, condition="thinning") + # specify which slope to plot (matters when we add more X's!)
   ylab("Probability of Tree Mortality") + # Add label axes
   xlab("Thinning Experiment") + # Add label axes
@@ -155,9 +167,13 @@ test_roc <- roc(treemortality$mortality
  
 # Thinning treatments had a significant effect on reducing the probability of tree mortality (p-value < 0.05). Without a thinning treatment, the baseline probability of tree mortality was 0.729 or roughly 73%. Including thinning treatment reduce the probability of tree mortality down to 0.297 or approximately 30%. Metrics of model fit were relatively high (71.0%) indicating that the results of our model were better than what we would predict by chance alone. 
 
+## ASW: great!! fantastic answer!
+
 ## 2b) The researchers explicitly considered the potential for confounding relationships related to tree size in their design and randomized their post-fire sampling by tree size. Given this information, do the researchers need to incorporate tree size into their glm to accurately estimate the effect of thinning? Why or why not?
 
 # Based on the information that the researchers accounted for potential confounding variables in their design by incorporating randomized sampling by tree size, it should not be necessary for them to include tree size in their glm. However, if they wanted to improve model fit they could try including tree size. 
+
+## ASW: excellent! Yes, you could include it for other reasons, but it's not needed to accurately estimate the effect of thinning!
 
 ## 2c) Refit the model from 2a to include the necessary variables to minimize bias in our estimation of the “thinning” variable, based on the reviewer’s proposed DAG (above). 
 
@@ -199,6 +215,9 @@ plogis(int + (slopethin*0)+(sloperoad*mean(treemortality$roaddist))+slopeslope*m
 plogis(int + (slopethin*1)+(sloperoad*mean(treemortality$roaddist))+slopeslope*mean(treemortality$slope))
 # = 0.3096572, 31%
 
+
+## ASW: great work here!
+
 # Plot by condition of thinning (but model also accounts for raod distance and slope)
 plot_predictions(bigmod.bi, condition="thinning") + # specify which slope to plot (matters when we add more X's!)
   ylab("Probability of Tree Mortality") + # Add label axes
@@ -218,4 +237,13 @@ test_roc <- roc(treemortality$mortality
 ### Does the effect of “thinning” change? If so, describe the degree of change and why the two models may differ in their conclusions. If needed, modify your model interpretation from 2a.
 
 # Road distance and slope both have a significant effect on the effect of thinning on tree mortality (p-value <0.05). By including both of these variables, tree mortality in unthinned forests is reduced from ~ 73% to 53% and tree mortality in thinned forests increases very slightly from 29.6% to 30.9%. The model fit also increases significantly from an AUC of 71.0% 95.6, indicating the model is well fit the results are very likely not due to chance. 
+
+## ASW: the AUC/ROC doesn't describe whether the results themselves are due to random chance (i.e, like a pvalue does), but rather the model's ability to classify "0s" and "1s" correctly.  AUC of 1.0 indicates perfect discrimination, while 0.5 indicates that the model isn't classifying values any better than a random guess would. (because if we were to take a random guess about whether an observation would be a 1 or 0, we would get it right 50% of the time). 
+
+## ASW: Why do slope and distance change the estimates for thinning based on our DAG? 
+
+## 18/20
+
+## great work! 48/50
+
 
